@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CRITICAL: Prevents 403 Forbidden hotlink blocks when running locally as file:/// -->
+  <meta name="referrer" content="no-referrer" />
   <title>ATELIER VAUCLUSE | Architectural & Interior Design Studio</title>
   <meta name="description" content="An exclusive architectural and luxury interior design studio specializing in bespoke residential and commercial environments." />
 
@@ -32,7 +34,6 @@
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
       --transition-base: 0.8s var(--ease-out-expo);
       --transition-fast: 0.3s ease;
       --site-pad: clamp(1.5rem, 5vw, 6rem);
@@ -73,9 +74,13 @@
 
     img {
       max-width: 100%;
-      height: auto;
+      height: 100%;
+      width: 100%;
       display: block;
       object-fit: cover;
+      /* GUARANTEED VISIBILITY: Images are never hidden by CSS */
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     a {
@@ -117,12 +122,12 @@
     }
 
     /* ==========================================================================
-       ROBUST EDITORIAL SCROLL REVEAL (NO CLIPPING BUGS)
+       SMOOTH SCROLL REVEALS
        ========================================================================== */
     .reveal-item {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+      transform: translateY(24px);
+      transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
       will-change: opacity, transform;
     }
     .reveal-item.is-revealed {
@@ -130,27 +135,22 @@
       transform: translateY(0);
     }
 
-    .delay-1 { transition-delay: 0.12s; }
-    .delay-2 { transition-delay: 0.22s; }
-    .delay-3 { transition-delay: 0.32s; }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
 
+    /* Clean Image Container without destructive clip-paths */
     .reveal-image-container {
       position: relative;
       overflow: hidden;
-      background-color: var(--stone);
+      background-color: #d8d4cd;
     }
     .reveal-image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transform: scale(1.08);
-      transition: opacity 1.1s var(--ease-out-expo), transform 1.3s var(--ease-out-expo);
-      will-change: opacity, transform;
+      transition: transform 1s var(--ease-out-expo), filter 0.6s ease;
+      will-change: transform;
     }
-    .reveal-image-container.is-revealed img {
-      opacity: 1;
-      transform: scale(1);
+    .reveal-image-container:hover img {
+      transform: scale(1.04);
     }
 
     /* CUSTOM CURSOR */
@@ -171,8 +171,8 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border: 1px solid var(--accent-bronze-light);
       border-radius: 50%;
       pointer-events: none;
@@ -187,8 +187,8 @@
       background-color: var(--accent-bronze);
     }
     body.hovered .custom-cursor-follower {
-      width: 55px;
-      height: 55px;
+      width: 52px;
+      height: 52px;
       border-color: var(--charcoal);
     }
 
@@ -264,8 +264,8 @@
     }
 
     .section-spacing {
-      padding-top: clamp(4rem, 10vw, 11rem);
-      padding-bottom: clamp(4rem, 10vw, 11rem);
+      padding-top: clamp(4rem, 10vw, 10rem);
+      padding-bottom: clamp(4rem, 10vw, 10rem);
     }
 
     .grid-12 {
@@ -281,7 +281,7 @@
       margin: 0;
     }
 
-    /* BUTTONS & LINKS */
+    /* BUTTONS */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -363,7 +363,7 @@
     }
 
     .site-header.scrolled {
-      background-color: rgba(249, 248, 245, 0.94);
+      background-color: rgba(249, 248, 245, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--stone);
@@ -513,14 +513,11 @@
     .page-view {
       display: none;
       opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
       min-height: 85vh;
     }
     .page-view.active-view {
       display: block;
       opacity: 1;
-      transform: translateY(0);
     }
 
     /* ==========================================================================
@@ -773,8 +770,8 @@
        ========================================================================== */
     .project-detail-hero {
       position: relative;
-      height: 80vh;
-      min-height: 550px;
+      height: 75vh;
+      min-height: 500px;
       width: 100%;
       background-color: var(--deep-black);
       overflow: hidden;
@@ -840,12 +837,6 @@
       background: var(--stone);
       position: relative;
     }
-    .horizontal-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 1s var(--ease-out-expo);
-    }
 
     .blueprint-callout {
       background: #1e1e1d;
@@ -906,11 +897,6 @@
       overflow: hidden;
       margin-bottom: 1.5rem;
       background-color: var(--stone);
-    }
-    .journal-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
 
     /* ==========================================================================
@@ -1092,7 +1078,7 @@
 
       <!-- Desktop Navigation -->
       <nav class="nav-menu-desktop">
-        <a class="nav-link" data-route="home" onclick="navigateTo('home')">Home</a>
+        <a class="nav-link active" data-route="home" onclick="navigateTo('home')">Home</a>
         <a class="nav-link" data-route="portfolio" onclick="navigateTo('portfolio')">Projects</a>
         <a class="nav-link" data-route="services" onclick="navigateTo('services')">Services</a>
         <a class="nav-link" data-route="studio" onclick="navigateTo('studio')">Studio</a>
@@ -1154,7 +1140,8 @@
         <div class="hero-bg-layer">
           <img 
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" 
-            alt="Modern luxury architecture with pool" 
+            alt="Modern luxury architecture"
+            onerror="imgFallback(this, 'villa')"
           />
         </div>
         <div class="hero-gradient-scrim"></div>
@@ -1228,6 +1215,7 @@
                 <img 
                   src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80" 
                   alt="Modernist alpine residence"
+                  onerror="imgFallback(this, 'house')"
                 />
               </div>
               <div class="project-card-meta">
@@ -1245,6 +1233,7 @@
                 <img 
                   src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80" 
                   alt="Minimalist limestone interior penthouse in Tribeca"
+                  onerror="imgFallback(this, 'interior')"
                 />
               </div>
               <div class="project-card-meta">
@@ -1262,6 +1251,7 @@
                 <img 
                   src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80" 
                   alt="Warm wood and concrete minimalist pavilion"
+                  onerror="imgFallback(this, 'facade')"
                 />
               </div>
               <div class="project-card-meta">
@@ -1279,6 +1269,7 @@
                 <img 
                   src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1400&q=80" 
                   alt="Contemporary corporate office interior"
+                  onerror="imgFallback(this, 'office')"
                 />
               </div>
               <div class="project-card-meta">
@@ -1318,6 +1309,7 @@
                 <img 
                   src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80" 
                   alt="Tactile stone wall detail with shadow play" 
+                  onerror="imgFallback(this, 'stone')"
                   style="box-shadow: 0 30px 60px rgba(0,0,0,0.5);"
                 />
                 <div style="position: absolute; bottom: 0; right: 0; background: var(--deep-black); padding: 1.5rem 2rem; border-left: 2px solid var(--accent-bronze);">
@@ -1422,7 +1414,11 @@
             <!-- Project 1 -->
             <article class="portfolio-item full-width project-editorial-card reveal-item" data-cat="residential" onclick="openProject('engadin')">
               <div class="project-card-image-wrap reveal-image-container" style="height: 65vh; min-height: 440px;">
-                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80" alt="Alpine monolithic villa" />
+                <img 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80" 
+                  alt="Alpine monolithic villa"
+                  onerror="imgFallback(this, 'villa')"
+                />
               </div>
               <div class="project-card-meta">
                 <div>
@@ -1436,7 +1432,11 @@
             <!-- Project 2 -->
             <article class="portfolio-item project-editorial-card reveal-item" data-cat="interior" onclick="openProject('lumina')">
               <div class="project-card-image-wrap reveal-image-container" style="aspect-ratio: 4/5;">
-                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80" alt="Minimal limestone loft" />
+                <img 
+                  src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80" 
+                  alt="Minimal limestone loft"
+                  onerror="imgFallback(this, 'interior')"
+                />
               </div>
               <div class="project-card-meta">
                 <div>
@@ -1450,7 +1450,11 @@
             <!-- Project 3 -->
             <article class="portfolio-item project-editorial-card reveal-item delay-1" data-cat="commercial" onclick="openProject('aethel')">
               <div class="project-card-image-wrap reveal-image-container" style="aspect-ratio: 4/5;">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" alt="Mayfair private capital office" />
+                <img 
+                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" 
+                  alt="Mayfair private capital office"
+                  onerror="imgFallback(this, 'office')"
+                />
               </div>
               <div class="project-card-meta">
                 <div>
@@ -1464,7 +1468,11 @@
             <!-- Project 4 -->
             <article class="portfolio-item project-editorial-card reveal-item" data-cat="residential" onclick="openProject('kyoto')">
               <div class="project-card-image-wrap reveal-image-container" style="aspect-ratio: 16/11;">
-                <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1400&q=80" alt="Modernist Kyoto retreat" />
+                <img 
+                  src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Modernist Kyoto retreat"
+                  onerror="imgFallback(this, 'facade')"
+                />
               </div>
               <div class="project-card-meta">
                 <div>
@@ -1478,7 +1486,11 @@
             <!-- Project 5 -->
             <article class="portfolio-item project-editorial-card reveal-item delay-1" data-cat="hospitality" onclick="openProject('engadin')">
               <div class="project-card-image-wrap reveal-image-container" style="aspect-ratio: 16/11;">
-                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1400&q=80" alt="Luxury retreat architecture" />
+                <img 
+                  src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Luxury retreat architecture"
+                  onerror="imgFallback(this, 'house')"
+                />
               </div>
               <div class="project-card-meta">
                 <div>
@@ -1499,25 +1511,30 @@
          ========================================================================== -->
     <div id="view-project-detail" class="page-view">
       <div class="project-detail-hero">
-        <img id="detailHeroImg" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" alt="Project Hero image" />
+        <img 
+          id="detailHeroImg" 
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" 
+          alt="Project Hero"
+          onerror="imgFallback(this, 'villa')"
+        />
       </div>
 
       <div class="project-meta-strip">
         <div class="container">
           <div class="grid-12">
-            <div style="grid-column: span 3;" class="reveal-item">
+            <div style="grid-column: span 3;">
               <p class="meta-stat-label">Project</p>
               <p class="meta-stat-val" id="detailTitle">The Engadin Monolith</p>
             </div>
-            <div style="grid-column: span 3;" class="reveal-item delay-1">
+            <div style="grid-column: span 3;">
               <p class="meta-stat-label">Location</p>
               <p class="meta-stat-val" id="detailLocation">St. Moritz, Switzerland</p>
             </div>
-            <div style="grid-column: span 3;" class="reveal-item delay-2">
+            <div style="grid-column: span 3;">
               <p class="meta-stat-label">Typology</p>
               <p class="meta-stat-val" id="detailTypology">Residential Architecture & Interiors</p>
             </div>
-            <div style="grid-column: span 3;" class="reveal-item delay-3">
+            <div style="grid-column: span 3;">
               <p class="meta-stat-label">Year / Footprint</p>
               <p class="meta-stat-val" id="detailArea">2024 &bull; 850 m²</p>
             </div>
@@ -1527,13 +1544,12 @@
 
       <section class="section-spacing">
         <div class="container">
-          <!-- Editorial Intro Narrative -->
           <div class="grid-12" style="margin-bottom: 5rem;">
-            <div style="grid-column: span 4;" class="reveal-item">
+            <div style="grid-column: span 4;">
               <span class="eyebrow">Architectural Statement</span>
               <h2 class="display-3" id="detailHeadline">An elemental dialogue between alpine granite and cedar warmth.</h2>
             </div>
-            <div style="grid-column: span 8;" class="reveal-item delay-1">
+            <div style="grid-column: span 8;">
               <p class="body-lead" id="detailOverview" style="margin-bottom: 1.5rem;">
                 Perched high on a steep rocky incline facing the Engadin valley, the project was envisioned as a geometric stone emergence rather than an intrusion into the landscape.
               </p>
@@ -1545,39 +1561,64 @@
 
           <!-- Gallery Sequence -->
           <div class="editorial-image-sequence">
-            <div style="grid-column: span 7;" class="reveal-item">
+            <div style="grid-column: span 7;">
               <div class="reveal-image-container" style="aspect-ratio: 16/11;">
-                <img id="detailSecImg1" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=80" alt="Living space interior composition" />
+                <img 
+                  id="detailSecImg1" 
+                  src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Living space interior composition"
+                  onerror="imgFallback(this, 'interior')"
+                />
               </div>
             </div>
-            <div style="grid-column: span 5;" class="reveal-item delay-1">
+            <div style="grid-column: span 5;">
               <div class="reveal-image-container" style="aspect-ratio: 4/5;">
-                <img id="detailSecImg2" src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1000&q=80" alt="Kitchen minimal stone detail" />
+                <img 
+                  id="detailSecImg2" 
+                  src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1000&q=80" 
+                  alt="Kitchen minimal stone detail"
+                  onerror="imgFallback(this, 'stone')"
+                />
               </div>
             </div>
           </div>
 
           <!-- Horizontal Visual Sequence -->
-          <div class="horizontal-gallery-wrap reveal-item">
+          <div class="horizontal-gallery-wrap">
             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem;">
               <span class="eyebrow">Visual Monograph Sequence</span>
               <span style="font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted-gray);">&larr; Drag or Scroll Horizon &rarr;</span>
             </div>
             <div class="horizontal-gallery-track" id="horizGallery">
               <div class="horizontal-slide">
-                <img id="slideImg1" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80" alt="Facade composition" />
+                <img 
+                  id="slideImg1" 
+                  src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Facade composition"
+                  onerror="imgFallback(this, 'house')"
+                />
               </div>
               <div class="horizontal-slide">
-                <img id="slideImg2" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80" alt="Stone texture detail" />
+                <img 
+                  id="slideImg2" 
+                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Stone texture detail"
+                  onerror="imgFallback(this, 'stone')"
+                />
               </div>
               <div class="horizontal-slide">
-                <img id="slideImg3" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="Courtyard dusk lighting" />
+                <img 
+                  id="slideImg3" 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Courtyard dusk lighting"
+                  onerror="imgFallback(this, 'villa')"
+                />
               </div>
             </div>
           </div>
 
           <!-- Blueprint Palette -->
-          <div class="blueprint-callout reveal-item" style="margin: 6rem 0;">
+          <div class="blueprint-callout" style="margin: 6rem 0;">
             <span class="technical-badge">Material Specification 09/A</span>
             <span class="eyebrow" style="color: var(--accent-bronze-light);">Palette & Finishes</span>
             <h3 class="display-3" style="margin-bottom: 2.5rem; color: #fff;">Curated Architectural Palette</h3>
@@ -1607,14 +1648,19 @@
           </div>
 
           <!-- Full Width Immersive Frame -->
-          <div style="margin: 5rem 0;" class="reveal-item">
+          <div style="margin: 5rem 0;">
             <div class="reveal-image-container" style="height: 70vh; min-height: 480px;">
-              <img id="detailSecImg3" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80" alt="Exterior evening architectural perspective" />
+              <img 
+                id="detailSecImg3" 
+                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80" 
+                alt="Exterior evening architectural perspective"
+                onerror="imgFallback(this, 'house')"
+              />
             </div>
           </div>
 
           <!-- Bottom CTA to Inquire -->
-          <div class="reveal-item" style="text-align: center; padding: 4rem 0 2rem;">
+          <div style="text-align: center; padding: 4rem 0 2rem;">
             <span class="eyebrow">Commission Similar Architecture</span>
             <h2 class="display-2" style="margin-bottom: 2rem;">Discuss a project with our partners</h2>
             <button class="btn btn-primary" onclick="navigateTo('contact')">
@@ -1631,9 +1677,9 @@
     <div id="view-services" class="page-view">
       <section class="page-hero-subtle">
         <div class="container">
-          <span class="eyebrow reveal-item">Capabilities</span>
-          <h1 class="display-1 reveal-item delay-1">Services & Discipline</h1>
-          <p class="body-lead reveal-item delay-2" style="max-width: 650px; margin-top: 1rem;">
+          <span class="eyebrow">Capabilities</span>
+          <h1 class="display-1">Services & Discipline</h1>
+          <p class="body-lead" style="max-width: 650px; margin-top: 1rem;">
             A holistic, vertically integrated architectural and luxury interior design consultancy operating across prime global locations.
           </p>
         </div>
@@ -1641,7 +1687,7 @@
 
       <section class="section-spacing">
         <div class="container">
-          <div class="service-row reveal-item">
+          <div class="service-row">
             <div class="grid-12" style="align-items: baseline;">
               <div style="grid-column: span 1;"><span class="service-index">01</span></div>
               <div style="grid-column: span 4;">
@@ -1655,7 +1701,7 @@
             </div>
           </div>
 
-          <div class="service-row reveal-item">
+          <div class="service-row">
             <div class="grid-12" style="align-items: baseline;">
               <div style="grid-column: span 1;"><span class="service-index">02</span></div>
               <div style="grid-column: span 4;">
@@ -1669,7 +1715,7 @@
             </div>
           </div>
 
-          <div class="service-row reveal-item">
+          <div class="service-row">
             <div class="grid-12" style="align-items: baseline;">
               <div style="grid-column: span 1;"><span class="service-index">03</span></div>
               <div style="grid-column: span 4;">
@@ -1683,7 +1729,7 @@
             </div>
           </div>
 
-          <div class="service-row reveal-item">
+          <div class="service-row">
             <div class="grid-12" style="align-items: baseline;">
               <div style="grid-column: span 1;"><span class="service-index">04</span></div>
               <div style="grid-column: span 4;">
@@ -1706,9 +1752,9 @@
     <div id="view-studio" class="page-view">
       <section class="page-hero-subtle">
         <div class="container">
-          <span class="eyebrow reveal-item">Studio Profile</span>
-          <h1 class="display-1 reveal-item delay-1">Atelier Vaucluse</h1>
-          <p class="body-lead reveal-item delay-2" style="max-width: 650px; margin-top: 1rem;">
+          <span class="eyebrow">Studio Profile</span>
+          <h1 class="display-1">Atelier Vaucluse</h1>
+          <p class="body-lead" style="max-width: 650px; margin-top: 1rem;">
             An independent architectural and interior studio committed to architectural permanence, tactile honesty, and elevated living.
           </p>
         </div>
@@ -1717,12 +1763,16 @@
       <section class="section-spacing">
         <div class="container">
           <div class="grid-12" style="align-items: center; margin-bottom: 6rem;">
-            <div style="grid-column: span 7;" class="reveal-item">
+            <div style="grid-column: span 7;">
               <div class="reveal-image-container" style="aspect-ratio: 16/11;">
-                <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1400&q=80" alt="Architectural studio atmosphere" />
+                <img 
+                  src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1400&q=80" 
+                  alt="Architectural studio atmosphere"
+                  onerror="imgFallback(this, 'interior')"
+                />
               </div>
             </div>
-            <div style="grid-column: span 5; padding-left: clamp(0rem, 2vw, 3rem);" class="reveal-item delay-1">
+            <div style="grid-column: span 5; padding-left: clamp(0rem, 2vw, 3rem);">
               <span class="eyebrow">The Atelier</span>
               <h2 class="display-2" style="margin-bottom: 1.5rem;">Rigorous craftsmanship.</h2>
               <p class="body-lead" style="margin-bottom: 1.5rem;">
@@ -1735,26 +1785,26 @@
           </div>
 
           <div class="grid-12" style="margin-top: 6rem;">
-            <div style="grid-column: span 12; margin-bottom: 3rem;" class="reveal-item">
+            <div style="grid-column: span 12; margin-bottom: 3rem;">
               <span class="eyebrow">Methodology</span>
               <h2 class="display-2">The 4-Stage Creative Process</h2>
             </div>
-            <div style="grid-column: span 3;" class="pillar-card reveal-item">
+            <div style="grid-column: span 3;" class="pillar-card">
               <span class="eyebrow">Phase 01</span>
               <h3 class="display-3" style="font-size: 1.35rem; margin-bottom: 0.8rem;">Topography & Immersion</h3>
               <p class="body-regular">In-depth site investigation, solar orientation, spatial flow study, and client lifestyle distillation.</p>
             </div>
-            <div style="grid-column: span 3;" class="pillar-card reveal-item delay-1">
+            <div style="grid-column: span 3;" class="pillar-card">
               <span class="eyebrow">Phase 02</span>
               <h3 class="display-3" style="font-size: 1.35rem; margin-bottom: 0.8rem;">Schematic Geometry</h3>
               <p class="body-regular">Translating programmatic needs into volumetric plans, physical clay models, and spatial axis lines.</p>
             </div>
-            <div style="grid-column: span 3;" class="pillar-card reveal-item delay-2">
+            <div style="grid-column: span 3;" class="pillar-card">
               <span class="eyebrow">Phase 03</span>
               <h3 class="display-3" style="font-size: 1.35rem; margin-bottom: 0.8rem;">Material Synthesis</h3>
               <p class="body-regular">Direct quarry visits, tactile mockups, custom joinery prototyping, and technical MEP integration.</p>
             </div>
-            <div style="grid-column: span 3;" class="pillar-card reveal-item delay-3">
+            <div style="grid-column: span 3;" class="pillar-card">
               <span class="eyebrow">Phase 04</span>
               <h3 class="display-3" style="font-size: 1.35rem; margin-bottom: 0.8rem;">Realization</h3>
               <p class="body-regular">Meticulous on-site execution oversight ensuring every junction and shadow reveal meets studio standards.</p>
@@ -1770,9 +1820,9 @@
     <div id="view-journal" class="page-view">
       <section class="page-hero-subtle">
         <div class="container">
-          <span class="eyebrow reveal-item">Journal & Thoughts</span>
-          <h1 class="display-1 reveal-item delay-1">The Monograph</h1>
-          <p class="body-lead reveal-item delay-2" style="max-width: 650px; margin-top: 1rem;">
+          <span class="eyebrow">Journal & Thoughts</span>
+          <h1 class="display-1">The Monograph</h1>
+          <p class="body-lead" style="max-width: 650px; margin-top: 1rem;">
             Critical reflections on modernism, materiality, acoustic luxury, and architectural permanence.
           </p>
         </div>
@@ -1781,18 +1831,26 @@
       <section class="section-spacing">
         <div class="container">
           <div class="grid-12">
-            <article style="grid-column: span 6;" class="journal-entry-card reveal-item" onclick="alert('Monograph Article: Selected reading.')">
+            <article style="grid-column: span 6;" class="journal-entry-card" onclick="alert('Monograph Article: Selected reading.')">
               <div class="journal-img-wrap reveal-image-container">
-                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80" alt="Sunlight on raw stone and wood interior" />
+                <img 
+                  src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80" 
+                  alt="Sunlight on raw stone and wood interior"
+                  onerror="imgFallback(this, 'interior')"
+                />
               </div>
               <span class="eyebrow">Essays &bull; 08 Mins</span>
               <h2 class="display-3" style="font-size: 1.7rem; margin-bottom: 0.8rem;">The Poetics of Chiaroscuro: Designing with Shadow</h2>
               <p class="body-regular">Why modern over-illuminated spaces sterilize intimacy, and how sculpting darkness can recover emotional tranquility.</p>
             </article>
 
-            <article style="grid-column: span 6;" class="journal-entry-card reveal-item delay-1" onclick="alert('Monograph Article: Selected reading.')">
+            <article style="grid-column: span 6;" class="journal-entry-card" onclick="alert('Monograph Article: Selected reading.')">
               <div class="journal-img-wrap reveal-image-container">
-                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80" alt="Monolithic bath and stone surfaces" />
+                <img 
+                  src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80" 
+                  alt="Monolithic bath and stone surfaces"
+                  onerror="imgFallback(this, 'stone')"
+                />
               </div>
               <span class="eyebrow">Materiality &bull; 05 Mins</span>
               <h2 class="display-3" style="font-size: 1.7rem; margin-bottom: 0.8rem;">The Living Patina: Embracing Wabi-Sabi in Natural Stone</h2>
@@ -1809,9 +1867,9 @@
     <div id="view-contact" class="page-view">
       <section class="page-hero-subtle">
         <div class="container">
-          <span class="eyebrow reveal-item">Consultation & Representation</span>
-          <h1 class="display-1 reveal-item delay-1">Initiate a Conversation</h1>
-          <p class="body-lead reveal-item delay-2" style="max-width: 650px; margin-top: 1rem;">
+          <span class="eyebrow">Consultation & Representation</span>
+          <h1 class="display-1">Initiate a Conversation</h1>
+          <p class="body-lead" style="max-width: 650px; margin-top: 1rem;">
             Whether embarking on a private residence, luxury residential development, or commercial headquarters, our partners review every inquiry personally.
           </p>
         </div>
@@ -1820,7 +1878,7 @@
       <section class="section-spacing">
         <div class="container">
           <div class="grid-12">
-            <div style="grid-column: span 5; padding-right: clamp(1rem, 3vw, 4rem);" class="reveal-item">
+            <div style="grid-column: span 5; padding-right: clamp(1rem, 3vw, 4rem);">
               <span class="eyebrow">Direct Contact</span>
               <h2 class="display-3" style="margin-bottom: 2rem;">Locations & Inquiries</h2>
 
@@ -1842,7 +1900,7 @@
               </div>
             </div>
 
-            <div style="grid-column: span 7;" class="reveal-item delay-1">
+            <div style="grid-column: span 7;">
               <div class="inquiry-panel">
                 <span class="eyebrow" style="color: var(--accent-bronze-light);">Project Brief</span>
                 <h3 class="display-2" style="color: #fff; margin-bottom: 2.5rem; font-size: 2.2rem;">Discuss Your Vision</h3>
@@ -1946,14 +2004,14 @@
   <footer class="site-footer">
     <div class="container">
       <div class="grid-12" style="margin-bottom: 4.5rem;">
-        <div style="grid-column: span 7;" class="reveal-item">
+        <div style="grid-column: span 7;">
           <h2 class="footer-huge-title">Sculpting Quiet Permanence.</h2>
           <p class="body-lead" style="color: var(--stone-dark); max-width: 500px;">
             Architectural and luxury interior environments designed with uncompromising attention to light, materiality, and proportion.
           </p>
         </div>
 
-        <div style="grid-column: span 2;" class="reveal-item delay-1">
+        <div style="grid-column: span 2;">
           <h3 class="footer-col-title">Index</h3>
           <ul class="footer-links">
             <li><a onclick="navigateTo('home')">Home</a></li>
@@ -1965,7 +2023,7 @@
           </ul>
         </div>
 
-        <div style="grid-column: span 3;" class="reveal-item delay-2">
+        <div style="grid-column: span 3;">
           <h3 class="footer-col-title">Offices</h3>
           <p class="body-regular" style="color: var(--stone-dark); margin-bottom: 1.2rem;">
             London &bull; Berkeley Square<br />
@@ -1994,6 +2052,33 @@
        CLIENT-SIDE JAVASCRIPT & CONTROLLER
        ========================================================================== -->
   <script>
+    /**
+     * BULLETPROOF SVG FALLBACK
+     * In case internet is offline or local restrictions block external images
+     */
+    function imgFallback(img, type) {
+      const themes = {
+        villa: { bg: '#2b2a28', text: 'ARCHITECTURAL RESIDENCE', sub: 'VALS QUARTZITE & CONCRETE' },
+        interior: { bg: '#33312e', text: 'MINIMALIST INTERIOR', sub: 'LIMESTONE & SMOKED OAK' },
+        facade: { bg: '#232220', text: 'CEDAR & STONE MONOLITH', sub: 'KYOTO SANCTUARY' },
+        office: { bg: '#292827', text: 'COMMERCIAL HEADQUARTERS', sub: 'MAYFAIR WORKPLACE' },
+        house: { bg: '#2f2e2c', text: 'ALPINE MONOGRAPH', sub: 'ST. MORITZ ELEVATION' },
+        stone: { bg: '#1e1d1b', text: 'TACTILE FINISH STUDY', sub: 'CHISELED MATERIALITY' }
+      };
+      const t = themes[type] || themes.villa;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+        <rect width="1200" height="800" fill="${t.bg}"/>
+        <line x1="100" y1="100" x2="1100" y2="100" stroke="#8E7D6B" stroke-width="1" stroke-opacity="0.3"/>
+        <line x1="100" y1="700" x2="1100" y2="700" stroke="#8E7D6B" stroke-width="1" stroke-opacity="0.3"/>
+        <line x1="100" y1="100" x2="100" y2="700" stroke="#8E7D6B" stroke-width="1" stroke-opacity="0.3"/>
+        <line x1="1100" y1="100" x2="1100" y2="700" stroke="#8E7D6B" stroke-width="1" stroke-opacity="0.3"/>
+        <text x="600" y="390" fill="#E6E2DC" font-family="serif" font-size="28" letter-spacing="6" text-anchor="middle">${t.text}</text>
+        <text x="600" y="440" fill="#8E7D6B" font-family="sans-serif" font-size="14" letter-spacing="4" text-anchor="middle">${t.sub}</text>
+      </svg>`;
+      img.onerror = null; // stop recursive loops
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+
     const projectDatabase = {
       'engadin': {
         title: 'The Engadin Monolith',
@@ -2070,17 +2155,13 @@
     };
 
     /**
-     * OBSERVER TO REVEAL IMAGES & TEXT RELIABLY
+     * CLEAN OBSERVER FOR TEXT REVEALS ONLY
      */
     let revealObserver;
     function setupScrollObservers() {
       if (revealObserver) revealObserver.disconnect();
 
-      const options = {
-        root: null,
-        threshold: 0.05
-      };
-
+      const options = { threshold: 0.05 };
       revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -2089,24 +2170,21 @@
         });
       }, options);
 
-      // Observe all relevant targets
-      document.querySelectorAll('.reveal-item, .reveal-image-container').forEach(el => {
+      document.querySelectorAll('.reveal-item').forEach(el => {
         revealObserver.observe(el);
       });
 
-      // Immediate reveal for items already in or near viewport
-      setTimeout(() => {
-        document.querySelectorAll('.reveal-item, .reveal-image-container').forEach(el => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight) {
-            el.classList.add('is-revealed');
-          }
-        });
-      }, 100);
+      // Instantly reveal elements currently in viewport
+      document.querySelectorAll('.reveal-item').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('is-revealed');
+        }
+      });
     }
 
     /**
-     * GLOBAL SCROLL CONTROLLER
+     * PROGRESS BAR & HEADER CONTROL
      */
     const progressBar = document.getElementById('scrollProgressBar');
     const header = document.getElementById('siteHeader');
@@ -2116,8 +2194,7 @@
       const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       
       if (docHeight > 0) {
-        const scrolledPercent = (scrollTop / docHeight) * 100;
-        progressBar.style.width = `${scrolledPercent}%`;
+        progressBar.style.width = `${(scrollTop / docHeight) * 100}%`;
       }
 
       const activeHome = document.getElementById('view-home').classList.contains('active-view');
@@ -2131,7 +2208,7 @@
     }, { passive: true });
 
     /**
-     * HORIZONTAL MOUSE DRAG AND WHEEL
+     * HORIZONTAL MOUSE DRAG & WHEEL
      */
     function initHorizontalGallery() {
       const track = document.getElementById('horizGallery');
@@ -2154,27 +2231,26 @@
         if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - track.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        track.scrollLeft = scrollLeft - walk;
+        track.scrollLeft = scrollLeft - (x - startX) * 1.5;
       });
     }
 
     /**
-     * ROUTING CONTROLLER
+     * CLIENT-SIDE ROUTER
      */
     function navigateTo(routeId) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      const views = document.querySelectorAll('.page-view');
-      views.forEach(view => view.classList.remove('active-view'));
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.remove('active-view');
+      });
 
       const target = document.getElementById(`view-${routeId}`);
       if (target) {
         target.classList.add('active-view');
       }
 
-      const links = document.querySelectorAll('.nav-link');
-      links.forEach(l => {
+      document.querySelectorAll('.nav-link').forEach(l => {
         if (l.dataset.route === routeId) {
           l.classList.add('active');
         } else {
@@ -2197,7 +2273,7 @@
     }
 
     /**
-     * MOBILE MENU
+     * MOBILE NAVIGATION
      */
     const menuToggle = document.getElementById('menuToggle');
     const closeMobileMenu = document.getElementById('closeMobileMenu');
@@ -2246,15 +2322,13 @@
     }
 
     /**
-     * PORTFOLIO CATEGORY FILTER
+     * CATEGORY FILTER
      */
     function filterProjects(cat, btnElement) {
-      const btns = document.querySelectorAll('#portfolioFilterBar .filter-btn');
-      btns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#portfolioFilterBar .filter-btn').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
 
-      const items = document.querySelectorAll('#portfolioGrid .portfolio-item');
-      items.forEach(item => {
+      document.querySelectorAll('#portfolioGrid .portfolio-item').forEach(item => {
         if (cat === 'all' || item.dataset.cat === cat) {
           item.style.display = 'block';
           item.classList.add('is-revealed');
@@ -2265,7 +2339,7 @@
     }
 
     /**
-     * INQUIRY SUBMISSION
+     * FORM SUBMIT
      */
     function handleInquirySubmit(e) {
       e.preventDefault();
@@ -2281,7 +2355,7 @@
     }
 
     /**
-     * BESPOKE CURSOR
+     * CURSOR FOLLOWER
      */
     const cursor = document.getElementById('cursor');
     const follower = document.getElementById('cursorFollower');
